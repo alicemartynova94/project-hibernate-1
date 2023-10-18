@@ -3,6 +3,7 @@ package com.game.repository;
 import com.game.entity.Player;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.query.NativeQuery;
@@ -55,7 +56,12 @@ public class PlayerRepositoryDB implements IPlayerRepository {
 
     @Override
     public Player save(Player player) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(player);
+            transaction.commit();
+            return player;
+        }
     }
 
     @Override
